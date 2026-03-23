@@ -1,0 +1,19 @@
+{
+  "name": "memory",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc -noEmit && vite build",
+    "preview": "vite preview"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "devDependencies": {
+    "sass": "^1.97.3",
+    "typescript": "^5.9.3",
+    "vite": "^7.3.1"
+  }
+}

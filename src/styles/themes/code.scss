@@ -1,0 +1,121 @@
+@import "./../style.scss";
+
+body {
+  background-color: #303131;
+  color: white;
+}
+
+.turnInfo > span {
+  font-size: 26px;
+}
+
+.main > header {
+  section {
+    @include dFlex();
+    gap: 20px;
+    background-color: #86e9d633;
+    padding: 17px 20px 17px 20px;
+    > div {
+      @include dFlex();
+      gap: 4px;
+    }
+    > div > span {
+      font-size: 24px;
+    }
+  }
+  div {
+    @include dFlex();
+    gap: 8px;
+  }
+  button {
+    border: 1px solid #4dd5bc;
+    background-color: #86e9d633;
+    padding: 16px 24px 16px 24px;
+    font: 24px "Rose Bold";
+    color: white;
+  }
+}
+
+.last_info {
+  h2 {
+    color: white;
+    font-size: 40px;
+  }
+  h1 {
+    font-size: 60px;
+    font-family: "Rose Bold";
+  }
+  button {
+    border: 1px solid #4dd5bc;
+    background-color: rgba(134, 233, 214, 0.2);
+    padding: 16px 24px 16px 24px;
+    font: 24px "Rose Bold";
+    color: white;
+  }
+}
+
+/* ===== EXIT DIALOG ===== */
+
+.exit_dialog {
+  top: -50%;
+}
+
+.back,
+.exit {
+  padding: 16px 24px 16px 24px;
+  font-family: "Rose Bold";
+  font-size: 20px;
+}
+
+.back {
+  background-color: #66cfbc;
+  border: solid #66cfbc 2px;
+  color: white;
+  &:hover {
+    border: solid #3abca4 2px;
+    background-color: #94ded1;
+  }
+}
+
+.exit {
+  background-color: #86e9d624;
+  border: solid #4dd5bc 1px;
+  margin: 1px;
+  color: #4dd5bc;
+  &:hover {
+    margin: 0px;
+    border: solid #4dd5bc 2px;
+    box-shadow: #86e9d624 2px 2px 2px;
+  }
+}
+
+/* ===== END SCREEN ===== */
+
+.wrapper {
+  background-color: #303131;
+  > h1 {
+    display: none;
+  }
+}
+
+.go_foods,
+.chess_blue,
+.chess_orange {
+  display: none;
+}
+
+/* ===== WIN SCREEN ===== */
+
+.win_screen {
+  z-index: 99;
+  > .wrapper {
+    @include dFlex($jc: flex-start !important);
+    > .confetti {
+      object-fit: cover;
+      width: 100%;
+      padding-inline: 103px;
+      position: relative;
+      top: -32px;
+    }
+  }
+}

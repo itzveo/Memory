@@ -1,0 +1,67 @@
+@import "../style.scss";
+
+body {
+  height: 100vh;
+  background-color: #2f3131;
+  color: white;
+  @include dFlex();
+  flex-direction: column;
+  > div {
+    display: flex;
+    flex-direction: column;
+  }
+  > div > h2 {
+    font-size: 48px;
+    font-family: 'Almarai';
+  }
+  > div > h1 {
+    font-family: "Rose Bold";
+    font-size: 140px;
+  }
+  > img {
+    object-fit: contain;
+    width: 414px;
+    height: 300px;
+    position: absolute;
+    bottom: 16px;
+    left: -88px;
+  }
+  > a {
+    text-decoration: none;
+    &:visited {
+        text-decoration: none;
+    }
+    > button {
+      @include dFlex($jc: space-around);
+      margin-top: 120px;
+      width: 250px;
+      height: 98px;
+      background-color: #f0ea6e;
+      &:hover {
+        cursor: pointer;
+        .controller {
+          display: none;
+        }
+        .controller--tilt {
+          display: flex;
+        }
+      }
+      > span {
+        font-family: "Rose Bold";
+        font-size: 40px;
+        color: #303131;
+      }
+    }
+  }
+}
+
+.controller {
+  object-fit: cover;
+  height: 32px;
+  width: 44px;
+  &--tilt {
+    display: none;
+    object-fit: contain;
+    width: 44px;
+  }
+}

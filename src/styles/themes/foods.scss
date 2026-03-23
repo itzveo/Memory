@@ -1,0 +1,180 @@
+@import "./../style.scss";
+
+body {
+  background-color: white;
+  color: #a45212;
+}
+
+.main > header {
+  @include dFlex($jc: space-between);
+  padding-inline: 24px;
+  background-color: #f0e5d9;
+  border-radius: 10px;
+  height: 102px;
+  > section {
+    @include dFlex();
+    gap: 40px;
+    height: 54px;
+    background-color: white;
+    padding-inline: 16px;
+    border-radius: 10px;
+    > div {
+      @include dFlex();
+      gap: 4px;
+    }
+    > div > span {
+      font-size: 30px;
+      font-family: "Delicius";
+    }
+    > div > .color {
+      display: none !important;
+    }
+  }
+  > div {
+    @include dFlex();
+    gap: 18px;
+    font-size: 32px;
+    color: #a45212;
+    > span {
+      font-family: "Klee One";
+    }
+  }
+  > button {
+    border: 3px solid #f3832d;
+    border-radius: 10px;
+    background-color: #fff9f2;
+    padding: 12px 20px 12px 20px;
+    font-family: "Rose Bold";
+    font-size: 16px;
+    color: #f3832d;
+    &:hover {
+      color: white;
+      background-color: #f3832d;
+      > img {
+        filter: brightness(0) saturate(100%) invert(100%) sepia(0%)
+          saturate(7500%) hue-rotate(110deg) brightness(98%) contrast(108%);
+      }
+    }
+    > span {
+      font-family: "Delicius";
+    }
+  }
+}
+
+/* ===== EXIT DIALOG ===== */
+
+.exit_dialog {
+  border-radius: 20px;
+  top: 150%;
+  > span {
+    font-family: "Klee One";
+  }
+  > button {
+    font-family: "Delicius";
+  }
+}
+
+.back,
+.exit {
+  padding: 12px 20px 12px 20px;
+  font-family: "Rose Bold";
+  font-size: 16px;
+}
+
+.back {
+  background-color: #ffab3e;
+  border: solid #f3832d 3px;
+  border-radius: 10px;
+  color: white;
+  &:hover {
+    border: solid #f3832d 3px;
+    background-color: #f3832d;
+  }
+}
+
+.exit {
+  background-color: #fff9f2;
+  border: solid #f3832d 3px;
+  border-radius: 10px;
+  color: #f3832d;
+  &:hover {
+    border: solid #f3832d 3px;
+    background-color: #f3832d;
+    color: white;
+  }
+}
+
+/* ===== END SCREEN ===== */
+
+.end_screen {
+  background-color: white;
+}
+
+.wrapper {
+  background-color: #f3832d;
+  > h1 {
+    display: none;
+  }
+  .info {
+    >span{
+      font-family: "Klee One";
+    }
+    > div {
+      background-color: white;
+      > div > span {
+        font-size: 40px;
+        font-family: "Rose Bold";
+      }
+    }
+  }
+}
+
+.go_code,
+.label_blue,
+.label_orange,
+.playerspan {
+  display: none;
+}
+
+/* ===== WIN SCREEN ===== */
+
+.win_screen > .wrapper {
+  background-color: white;
+  justify-content: center;
+}
+
+.confetti {
+  display: none;
+}
+
+.last_info {
+  h2 {
+    color: #a45212;
+    font-size: 40px;
+    font-family: "Klee One";
+  }
+  h1 {
+    color: #a45212;
+    font-size: 80px;
+    font-family: "Klee One";
+  }
+  div {
+    padding: 24px 30px 24px 30px;
+    background-color: #f7e6d5;
+    > img {
+      object-fit: cover;
+      height: 250px;
+    }
+  }
+  button {
+    border: none;
+    border-radius: 10px;
+    background-color: #f3832d;
+    padding: 12px 20px 12px 20px;
+    font: 16px "Delicius";
+    color: white;
+    &:hover {
+      box-shadow: rgba(0, 0, 0, 0.2) 4px 4px 4px;
+    }
+  }
+}

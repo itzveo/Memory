@@ -1,0 +1,100 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Memory Game</title>
+    <link rel="icon" type="image/png" sizes="192x192" href=/fav/android-chrome-192x192.png />
+    <link rel="apple-touch-icon" sizes="180x180" href=/fav/apple-touch-icon.png />
+    <link rel="icon" type="image/png" sizes="32x32" href=/fav/favicon-32x32.png />
+    <link rel="icon" type="image/png" sizes="16x16" href=/fav/favicon-16x16.png />
+    <link rel="manifest" href=/fav/site.webmanifest />
+  </head>
+  <body>
+    <dialog open id="end_screen" class="end_screen">
+      <div class="wrapper">
+        <div class="img_wrapper">
+          <img class="z1 go_code" src=/go_green.png alt="" />
+          <img class="go_code" src=/go_white.png alt="" />
+          <img class="go_foods" src=/go_foods.png alt="">
+        </div>
+        <h1>Game over</h1>
+        <div class="info">
+          <span>Final score</span>
+          <div>
+            <div>
+              <img class="label_blue" src=/label_blue.svg alt="" />
+              <img class="chess_blue" src=/chess_blue.svg alt="" />
+              <span class="blue playerspan">Blue</span>
+              <span id="endscore_blue" class="score blue">0</span>
+            </div>
+            <div>
+              <img class="label_orange" src=/label_orange.svg alt="" />
+              <img class="chess_orange" src=/chess_orange.svg alt="" />
+              <span class="orange playerspan">Orange</span>
+              <span id="endscore_orange" class="score orange">0</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </dialog>
+    <dialog open id="win_screen" class="win_screen">
+      <div class="wrapper">
+        <img class="confetti" src=/confetti.png alt="" />
+        <div class="last_info">
+          <h2>The winner is</h2>
+          <h1>BLUE PLAYER</h1>
+          <div>
+            <img class="winner" src=/chess_blue.svg alt="" />
+          </div>
+          <button id="restart">Home</button>
+        </div>
+      </div>
+    </dialog>
+    <dialog open id="exit_dialog" class="exit_dialog">
+      <span>Are you sure you want to quit the game?</span>
+      <div>
+        <button id="back" class="back">Back to game</button>
+        <button id="exit" class="exit">Exit game</button>
+      </div>
+    </dialog>
+    <div id="bgO" class="bgO"></div>
+    <section class="main">
+      <header>
+        <section>
+          <div>
+            <img id="player_blue" src="" alt="" />
+            <span class="blue color">Blue</span>
+            <span class="blue" id="score_blue">0</span>
+          </div>
+          <div>
+            <img id="player_orange" src="" alt="" />
+            <span class="orange color">Orange</span>
+            <span class="orange" id="score_orange">0</span>
+          </div>
+        </section>
+        <div class="turnInfo">
+          <span>Current player:</span>
+          <img id="currentPlayer" class="currentPlayer" src=/label_blue.svg alt="" />
+        </div>
+        <button id="exit_btn" class="exit_btn">
+          <img id="exit_icon" class="exit_icon" src="" alt="" />
+          <span>Exit Game</span>
+        </button>
+      </header>
+      <div id="board" class="board">
+        <button class="card">
+          <div class="card__inner">
+            <img class="card__face" src=/code/code_back.png alt="" />
+            <img
+              class="card__face card__face--back"
+              src=/code/angular.png
+              alt=""
+            />
+          </div>
+        </button>
+      </div>
+    </section>
+    <script type="module" src="./src/game.ts"></script>
+  </body>
+</html>
