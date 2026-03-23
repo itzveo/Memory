@@ -12,12 +12,12 @@ const THEMES = {
   "Code vibes theme": {
     array: code,
     back: "code_back.png",
-    path: "./public/code/",
+    path: "/code/",
   },
   "Foods theme": {
     array: foods,
     back: "foods_back.png",
-    path: "./public/foods/",
+    path: "/foods/",
   },
 } as const;
 
@@ -39,11 +39,11 @@ export function loadTheme(theme: string | null) {
  */
 function returnCodeObjects() {
   (document.getElementById("player_blue") as HTMLImageElement).src =
-    "./public/label_blue.svg";
+    "/label_blue.svg";
   (document.getElementById("player_orange") as HTMLImageElement).src =
-    "./public/label_orange.svg";
+    "/label_orange.svg";
   (document.getElementById("exit_icon") as HTMLImageElement).src =
-    "./public/exit.svg";
+    "/exit.svg";
   (document.getElementById("restart") as HTMLElement).innerHTML =
     "Back to start";
 }
@@ -53,11 +53,11 @@ function returnCodeObjects() {
  */
 function returnFoodObjects() {
   (document.getElementById("player_blue") as HTMLImageElement).src =
-    "./public/chess_blue.svg";
+    "/chess_blue.svg";
   (document.getElementById("player_orange") as HTMLImageElement).src =
-    "./public/chess_orange.svg";
+    "/chess_orange.svg";
   (document.getElementById("exit_icon") as HTMLImageElement).src =
-    "./public/exit_orange.svg";
+    "/exit_orange.svg";
   (document.getElementById("restart") as HTMLElement).innerHTML = "Home";
 }
 
@@ -167,10 +167,10 @@ function updatePlayerIndicator(player: Player, theme: string | null) {
   const el = document.getElementById("currentPlayer") as HTMLImageElement;
   const p = player.toLowerCase() as Player;
   if (theme === "Code vibes theme") {
-    el.src = `./public/label_${p}.svg`;
+    el.src = `/label_${p}.svg`;
     el.style.backgroundColor = "";
   } else if (theme === "Foods theme") {
-    el.src = "./public/chess_white.svg";
+    el.src = "/chess_white.svg";
     el.style.backgroundColor = p === "blue" ? "#2bb1ff" : "#f58e39";
   }
 }
@@ -372,14 +372,14 @@ function populateWinScreen(winner: GameResult, theme: string | null) {
   if (winner === "tie") {
     h1.textContent = "It's a Tie!";
     h1.className = "";
-    img.src = `./public/chess_white.svg`;
+    img.src = `/chess_white.svg`;
     return;
   }
 
   h1.textContent = `${winner.charAt(0).toUpperCase() + winner.slice(1)} Player`;
   h1.className = "";
   if (theme === "Code vibes theme") h1.classList.add(winner);
-  img.src = `./public/chess_${winner}.svg`;
+  img.src = `/chess_${winner}.svg`;
 }
 
 /**
@@ -449,7 +449,7 @@ function closeExitDialog() {
  * Navigates the user back to the settings page.
  */
 function exitGame() {
-  window.location.href = "/dist/settings.html";
+  window.location.href = "/settings.html";
 }
 
 /**
