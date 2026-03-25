@@ -1,8 +1,10 @@
 import "./styles/pages/game.scss";
 import { code, foods } from "./cards";
+import { attachCardListener } from "./cardListener";
+import { loadTheme, loadThemeObjects, updatePlayerIndicator } from "./theme";
 
-const theme = sessionStorage.getItem("theme");
-const player = sessionStorage.getItem("player");
+const theme = sessionStorage.getItem("theme") ?? "Code vibes theme";
+const player = sessionStorage.getItem("player") ?? "blue";
 const board = parseInt(sessionStorage.getItem("board") || "16", 10);
 
 const dialog = document.getElementById("exit_dialog") as HTMLElement;
@@ -21,58 +23,6 @@ const THEMES = {
   },
 } as const;
 
-
-/**
- * Loads the theme-specific stylesheet dynamically via code splitting.
- * @param theme - The name of the selected theme, or null if none is set.
- */
-export function loadTheme(theme: string | null) {
-  if (theme === "Code vibes theme") {
-    import("./styles/themes/code.scss");
-  } else if (theme === "Foods theme") {
-    import("./styles/themes/foods.scss");
-  }
-}
-
-/**
- * Updates UI elements (images, labels) to match the Code vibes theme.
- */
-function returnCodeObjects() {
-  (document.getElementById("player_blue") as HTMLImageElement).src =
-    "/label_blue.svg";
-  (document.getElementById("player_orange") as HTMLImageElement).src =
-    "/label_orange.svg";
-  (document.getElementById("exit_icon") as HTMLImageElement).src =
-    "/exit.svg";
-  (document.getElementById("restart") as HTMLElement).innerHTML =
-    "Back to start";
-}
-
-/**
- * Updates UI elements (images, labels) to match the Foods theme.
- */
-function returnFoodObjects() {
-  (document.getElementById("player_blue") as HTMLImageElement).src =
-    "/chess_blue.svg";
-  (document.getElementById("player_orange") as HTMLImageElement).src =
-    "/chess_orange.svg";
-  (document.getElementById("exit_icon") as HTMLImageElement).src =
-    "/exit_orange.svg";
-  (document.getElementById("restart") as HTMLElement).innerHTML = "Home";
-}
-
-/**
- * Delegates to the appropriate theme-specific UI update function.
- * @param theme - The active theme name, or null.
- */
-function loadThemeObjects(theme: string | null) {
-  if (theme === "Code vibes theme") {
-    returnCodeObjects();
-  } else if (theme === "Foods theme") {
-    returnFoodObjects();
-  }
-}
-
 /**
  * Returns the configuration object (card array, back image, asset path)
  * for the given theme, falling back to "Code vibes theme" if not found.
@@ -87,7 +37,7 @@ function getThemeConfig(theme: string) {
  * Creates a flip-card button element with a front and back face.
  * @param frontSrc - Image source for the front (back) face of the card.
  * @param backSrc  - Image source for the back (revealed) face of the card.
- * @returns A fully constructed card 
+ * @returns A fully constructed card
  */
 function createCard(frontSrc: string, backSrc: string): HTMLButtonElement {
   const button = document.createElement("button");
@@ -135,7 +85,7 @@ function getShuffledPairs(array: string[], count: number): string[] {
  * @param boardEl - The board container element.
  * @param board   - Total card count (16 | 24 | 36).
  */
-function setGridLayout(boardEl: HTMLElement, board: number) {
+function setGridLayout(boardEl: HTMLElement, board: number):void {
   const layouts: Record<number, [string, string]> = {
     16: ["repeat(4, 1fr)", "repeat(4, 1fr)"],
     24: ["repeat(4, 1fr)", "repeat(6, 1fr)"],
@@ -154,32 +104,15 @@ type GameResult = Player | "tie";
  * @param current - The player whose turn just ended.
  * @returns The opposing player.
  */
-function getNextPlayer(current: Player): Player {
+export function getNextPlayer(current: Player): Player {
   return current === "blue" ? "orange" : "blue";
-}
-
-/**
- * Updates the current-player indicator image to reflect whose turn it is.
- * @param player - The player now taking their turn.
- * @param theme  - The active theme name, or null.
- */
-function updatePlayerIndicator(player: Player, theme: string | null) {
-  const el = document.getElementById("currentPlayer") as HTMLImageElement;
-  const p = player.toLowerCase() as Player;
-  if (theme === "Code vibes theme") {
-    el.src = `/label_${p}.svg`;
-    el.style.backgroundColor = "";
-  } else if (theme === "Foods theme") {
-    el.src = "/chess_white.svg";
-    el.style.backgroundColor = p === "blue" ? "#2bb1ff" : "#f58e39";
-  }
 }
 
 /**
  * Increments the displayed score counter for the given player by one.
  * @param player - The player who just scored a matched pair.
  */
-function updateScore(player: Player) {
+function updateScore(player: Player): void {
   const scoreEl = document.getElementById(`score_${player}`)!;
   scoreEl.textContent = (parseInt(scoreEl.textContent || "0") + 1).toString();
 }
@@ -192,7 +125,7 @@ function updateScore(player: Player) {
  * @param releaseLock   - Callback that resets the flipped-card state and unlocks the board.
  * @param currentPlayer - The player who made the match.
  * @param boardEl       - The board container element.
- * @param theme         - The active theme name, or null.
+ * @param theme         - The active theme name.
  */
 function handleMatch(
   first: HTMLButtonElement,
@@ -200,8 +133,8 @@ function handleMatch(
   releaseLock: () => void,
   currentPlayer: Player,
   boardEl: HTMLElement,
-  theme: string | null
-) {
+  theme: string,
+): void {
   first.classList.add("is-matched");
   second.classList.add("is-matched");
   updateScore(currentPlayer);
@@ -222,7 +155,7 @@ function handleMismatch(
   second: HTMLButtonElement,
   releaseLock: () => void,
   switchPlayer: () => void,
-) {
+): void {
   setTimeout(() => {
     first.classList.remove("is-flipped");
     second.classList.remove("is-flipped");
@@ -248,16 +181,16 @@ function getCardImageSrc(card: HTMLButtonElement): string | undefined {
  * @param switchPlayer  - Callback to advance the turn.
  * @param currentPlayer - The player who flipped the cards.
  * @param boardEl       - The board container element.
- * @param theme         - The active theme name, or null.
+ * @param theme         - The active theme name.
  */
-function checkPair(
+ export function checkPair(
   flipped: HTMLButtonElement[],
   releaseLock: () => void,
   switchPlayer: () => void,
   currentPlayer: Player,
   boardEl: HTMLElement,
-  theme: string | null
-) {
+  theme: string,
+): void {
   const [first, second] = flipped;
   if (getCardImageSrc(first) === getCardImageSrc(second)) {
     handleMatch(first, second, releaseLock, currentPlayer, boardEl, theme);
@@ -267,58 +200,12 @@ function checkPair(
 }
 
 /**
- * Attaches a delegated click listener to the board that handles card
- * flipping, board locking, and pair-checking logic.
- * @param boardEl     - The board container element.
- * @param theme       - The active theme name, or null.
- * @param startPlayer - The player who takes the first turn.
- */
-function attachCardListener(
-  boardEl: HTMLElement,
-  theme: string | null,
-  startPlayer: Player,
-) {
-  let flipped: HTMLButtonElement[] = [];
-  let lockBoard = false;
-  let currentPlayer: Player = startPlayer;
-
-  const releaseLock = () => {
-    flipped = [];
-    lockBoard = false;
-  };
-  const switchPlayer = () => {
-    currentPlayer = getNextPlayer(currentPlayer);
-    updatePlayerIndicator(currentPlayer, theme);
-  };
-
-  boardEl.addEventListener("click", (e) => {
-    if (lockBoard) return;
-    const card = (e.target as HTMLElement).closest(
-      ".card",
-    ) as HTMLButtonElement;
-    if (
-      !card ||
-      card.classList.contains("is-flipped") ||
-      card.classList.contains("is-matched")
-    )
-      return;
-
-    card.classList.add("is-flipped");
-    flipped.push(card);
-    if (flipped.length === 2) {
-      lockBoard = true;
-      checkPair(flipped, releaseLock, switchPlayer, currentPlayer, boardEl, theme);
-    }
-  });
-}
-
-/**
  * Clears the board, renders a fresh set of shuffled card pairs for the
  * chosen theme and board size, and attaches interaction logic.
  * @param board - Total number of cards (16 | 24 | 36).
- * @param theme - The active theme name, or null.
+ * @param theme - The active theme name.
  */
-function loadBoard(board: number, theme: string | null) {
+function loadBoard(board: number, theme: string): void {
   const boardEl = document.getElementById("board")!;
   boardEl.innerHTML = "";
 
@@ -341,8 +228,12 @@ function loadBoard(board: number, theme: string | null) {
  * @returns The winning {@link Player}, or `"tie"`.
  */
 function getWinner(): GameResult {
-  const blueScore = parseInt(document.getElementById("score_blue")!.textContent || "0");
-  const orangeScore = parseInt(document.getElementById("score_orange")!.textContent || "0");
+  const blueScore = parseInt(
+    document.getElementById("score_blue")!.textContent || "0",
+  );
+  const orangeScore = parseInt(
+    document.getElementById("score_orange")!.textContent || "0",
+  );
   if (blueScore === orangeScore) return "tie";
   return blueScore > orangeScore ? "blue" : "orange";
 }
@@ -351,30 +242,30 @@ function getWinner(): GameResult {
  * Copies the final scores from the in-game score display into the
  * end-screen summary elements.
  */
-function populateEndScreen() {
+function populateEndScreen(): void {
   const blueScore = document.getElementById("score_blue")!.textContent || "0";
   const orangeScore =
     document.getElementById("score_orange")!.textContent || "0";
-    document.getElementById("endscore_blue")!.textContent = blueScore;
-    document.getElementById("endscore_orange")!.textContent = orangeScore;
+  document.getElementById("endscore_blue")!.textContent = blueScore;
+  document.getElementById("endscore_orange")!.textContent = orangeScore;
 }
 
 /**
  * Populates the win-screen heading and player image based on the
  * game result.
  * @param winner - The winning player, or `"tie"`.
- * @param theme  - The active theme name, or null.
+ * @param theme  - The active theme name.
  */
-function populateWinScreen(winner: GameResult, theme: string | null) {
+function populateWinScreen(winner: GameResult, theme: string): void {
   const h1 = document.querySelector("#win_screen h1")!;
   const img = document.querySelector("#win_screen .winner") as HTMLImageElement;
 
   if (winner === "tie") {
-    h1.textContent = "It's a Tie!";
-    h1.className = "";
-    img.src = `/chess_white.svg`;
-    return;
-  }
+  h1.textContent = "It's a Tie!";
+  (document.querySelector("#win_screen h2") as HTMLElement).style.display = "none";
+  img.src = `/chess_white.svg`;
+  return;
+}
 
   h1.textContent = `${winner.charAt(0).toUpperCase() + winner.slice(1)} Player`;
   h1.className = "";
@@ -385,7 +276,7 @@ function populateWinScreen(winner: GameResult, theme: string | null) {
 /**
  * Slides the end-screen overlay into view with a CSS transition.
  */
-function showEnd() {
+function showEnd(): void {
   let endRef = document.getElementById("end_screen");
   if (endRef) {
     endRef.style.top = "0";
@@ -396,7 +287,7 @@ function showEnd() {
 /**
  * Slides the win-screen overlay into view with a CSS transition.
  */
-function showWin() {
+function showWin(): void {
   let winRef = document.getElementById("win_screen");
   if (winRef) {
     winRef.style.top = "0";
@@ -408,9 +299,9 @@ function showWin() {
  * Checks whether all cards on the board have been matched. If so,
  * reveals the end screen and schedules the win screen after a delay.
  * @param boardEl - The board container element.
- * @param theme   - The active theme name, or null.
+ * @param theme   - The active theme name.
  */
-function checkGameEnd(boardEl: HTMLElement, theme: string | null) {
+function checkGameEnd(boardEl: HTMLElement, theme: string): void {
   const remaining = boardEl.querySelectorAll(".card:not(.is-matched)");
   if (remaining.length > 0) return;
   populateEndScreen();
@@ -430,7 +321,7 @@ document.getElementById("restart")?.addEventListener("click", exitGame);
 /**
  * Opens the exit confirmation dialog and shows the backdrop overlay.
  */
-function openExitDialog() {
+function openExitDialog(): void {
   dialog.style.top = "50%";
   bgO.style.display = "flex";
 }
@@ -438,7 +329,7 @@ function openExitDialog() {
 /**
  * Closes the exit confirmation dialog and hides the backdrop overlay.
  */
-function closeExitDialog() {
+function closeExitDialog(): void {
   if (theme === "Code vibes theme") {
     dialog.style.top = "-50%";
   } else dialog.style.top = "150%";
@@ -448,7 +339,7 @@ function closeExitDialog() {
 /**
  * Navigates the user back to the settings page.
  */
-function exitGame() {
+function exitGame(): void {
   window.location.href = "/settings.html";
 }
 
@@ -456,7 +347,7 @@ function exitGame() {
  * Entry point — loads the theme, initialises UI elements, sets the
  * starting player indicator, and renders the game board.
  */
-function onInit() {
+function onInit(): void {
   loadTheme(theme);
   loadThemeObjects(theme);
   const startPlayer = (player?.toLowerCase() as Player) ?? "blue";
